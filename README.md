@@ -144,10 +144,29 @@ source ~/.bashrc        # for bashrc.d changes
 
 ## Prerequisites
 
-- `claude` binary on `$PATH` (Claude Code) — required for the `_autoclaude` aliases
+- `claude` binary on `$PATH` — Claude Code **v2.1.83 or later** (required for `--permission-mode auto`)
 - `tmux` 3.0 or later
 - `git` — for TPM plugin cloning
 - Tailscale — optional, but it's how the multi-device workflow reaches the desktop
+
+### Auto-mode account requirements
+
+`--permission-mode auto` is gated by Anthropic and requires **all** of the following. If your account doesn't meet them, the `_autoclaude` aliases will fail with an "auto mode unavailable" error at session start.
+
+| Requirement | What's allowed |
+|---|---|
+| **Plan** | Max, Team, Enterprise, or API. **Not available on Pro.** |
+| **Model** | Sonnet 4.6, Opus 4.6, or Opus 4.7 on Team / Enterprise / API plans; **Opus 4.7 only on Max** |
+| **Provider** | Anthropic API only — not Bedrock, Vertex, or Foundry |
+| **Org policy** | On Team / Enterprise, an admin must enable auto mode in Claude Code admin settings |
+
+Quick check from your shell before installing:
+
+```bash
+claude --permission-mode auto -p "echo ready"
+```
+
+If it prints `ready`, you're good. If it errors with "auto mode unavailable", one of the requirements above isn't met — see [tmux-dangerclaude-config](https://github.com/MartyBonacci/tmux-dangerclaude-config) for the no-account-gate variant (works on any plan, uses `--dangerously-skip-permissions`), or just use the standard `claude` command without a wrapper.
 
 ## Termux note
 
